@@ -34,8 +34,7 @@ This repository hosts the code used in my research on how the loss of MLL3 affec
       * IDR version 2.0.3
    1. Enrichment Analysis
       1. GREAT
-         * version
-         * parameters
+         * Version 3.0.0
       1. WebGestalt
          * See Info Above
    1. Motif Analysis
