@@ -1,0 +1,24 @@
+# ---------------------
+# BEDTools Closest
+# ---------------------
+
+# https://bedtools.readthedocs.io/en/latest/content/tools/closest.html
+
+# do a second analysis with a bedfile of random genes
+# how to generate a selection of 4547 random genes? wrote a script to pick out random genes from gff3 file
+
+# bedtools closest requires that all input files are presorted data by chromosome and then by start position (e.g., sort -k1,1 -k2,2n in.bed > in.sorted.bed for BED files).
+
+cd /Users/staufferkm/Desktop/Sequencing/ChIP-seq/2019bedfiles/bedfiles/
+sort -k1,1 -k2,2n ZR751shMLL3Era.final.peaks.bed > ZR751shMLL3Era.final.peaks.sort.bed
+
+perl /Users/staufferkm/Downloads/gff3sort-master/gff3sort.pl /Users/staufferkm/Desktop/bedtoolsclosest/ZR751DEG_April2019.gff3 > /Users/staufferkm/Desktop/bedtoolsclosest/ZR751DEG_April2019.sort.gff3
+perl /Users/staufferkm/Downloads/gff3sort-master/gff3sort.pl /Users/staufferkm/Desktop/ForBedtoolsClosest_RandomGenes.gff3 > /Users/staufferkm/Desktop/ForBedtoolsClosest_RandomGenes.sort.gff3
+
+#####################
+# Ok now we're going to do peak --> with a max of two genes per peak 
+#####################
+
+bedtools closest -D ref -t all -k 2 -mdb each -a /Users/staufferkm/Desktop/Sequencing/ChIP-seq/2019bedfiles/bedfiles/ZR751shMLL3Era.final.peaks.sort.bed -b /Users/staufferkm/Desktop/bedtoolsclosest/ZR751DEG_April2019.sort.gff3 > /Users/staufferkm/Desktop/DEGdistancesfromZME_bedtoolsclosest_April2019.txt
+
+#repeat with random genes

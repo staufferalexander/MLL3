@@ -1,0 +1,9 @@
+#!/bin/bash
+#SBATCH --mail-user=kimberly.m.stauffer@vanderbilt.edu 
+#SBATCH --mail-type=ALL
+#SBATCH --nodes=1
+#SBATCH --mem=120000mb
+#SBATCH --time=48:00:00
+#SBATCH --output /scratch/stauffkm/cuffnormformycells.log                       
+
+cuffnorm -o /scratch/stauffkm/MLL32018/cuffnorm/ --library-type fr-firststrand --library-norm-method geometric /scratch/stauffkm/MLL32018/cuffmerge/merged.gtf /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-195/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-216/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-198/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-207/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-203/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-214/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-196/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-201/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-194/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-212/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-217/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-209/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-205/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-210/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-204/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-213/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-202/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-199/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-206/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-211/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-215/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-197/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-208/abundances.cxb /scratch/stauffkm/MLL32018/cuffquant/3040-TPS-200/abundances.cxb

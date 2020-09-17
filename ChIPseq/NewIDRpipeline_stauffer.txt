@@ -1,0 +1,392 @@
+# =============================
+### Call peaks on replicates, self-pseudoreplicates, pooled data and pooled-pseudoreplicates
+# =============================
+trying to filter and remove duplicates with SP1 samples
+
+ZR751shMLL3H3K4me1 - 3040-TPS-125 and 3040-TPS-119
+ZR751shLucifH3K4me1 - 3040-TPS-126 and 3040-TPS-121
+ZR751shMLL3ERa - 3040-TPS-124 and 3040-TPS-135
+ZR751shLucifERa - 3040-TPS-137 and 2501-KS-4
+
+/data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-125.sort.bam
+/data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-119.sort.bam
+
+/data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-126.sort.bam
+/data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-121.sort.bam
+
+/data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-135.sort.bam
+/data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-124.sort.bam
+
+/data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-137.sort.bam
+/data/strickt2/MLL32501/alignments/2501-KS-4.sort.bam
+
+# =============================
+# Remove  unmapped, mate unmapped
+# not primary alignment, reads failing platform
+# Remove low MAPQ reads
+# ==================  
+FILT_BAM_PREFIX="${OFPREFIX}.filt.srt"
+FILT_BAM_FILE="${FILT_BAM_PREFIX}.bam"
+MAPQ_THRESH=30
+
+samtools view -F 1804 -q ${MAPQ_THRESH} -b ${RAW_BAM_FILE} -o ${FILT_BAM_FILE}
+samtools view -F 1804 -q 30 -b /data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-125.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.sort.bam
+samtools view -F 1804 -q 30 -b /data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-119.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.sort.bam
+samtools view -F 1804 -q 30 -b /data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-126.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.sort.bam
+samtools view -F 1804 -q 30 -b /data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-121.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.sort.bam
+samtools view -F 1804 -q 30 -b /data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-124.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.sort.bam
+samtools view -F 1804 -q 30 -b /data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-135.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.sort.bam
+samtools view -F 1804 -q 30 -b /data/strickt2/chipseq/chipseq_H5CC5BBXX/alignments/clean_bams/3040-TPS-137.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.sort.bam
+samtools view -F 1804 -q 30 -b /data/strickt2/MLL32501/alignments/2501-KS-4.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.sort.bam
+
+# ========================
+# Mark duplicates
+# ======================
+module add picard-tools/1.126
+TMP_FILT_BAM_FILE="${FILT_BAM_PREFIX}.dupmark.bam"
+MARKDUP="/srv/gs1/software/picard-tools/1.126/picard MarkDuplicates"
+DUP_FILE_QC="${FILT_BAM_PREFIX}.dup.qc" # QC file
+java -Xmx4G -jar ${MARKDUP} INPUT=${FILT_BAM_FILE} OUTPUT=${TMP_FILT_BAM_FILE} METRICS_FILE=${DUP_FILE_QC} VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+mv ${TMP_FILT_BAM_FILE} ${FILT_BAM_FILE}
+
+java -Xmx4G -jar /home/stauffkm/picard-tools-1.141/picard.jar MarkDuplicates INPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.sort.bam OUTPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.dupmark.bam  METRICS_FILE=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.dup.qc  VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+java -Xmx4G -jar /home/stauffkm/picard-tools-1.141/picard.jar MarkDuplicates INPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.sort.bam OUTPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.dupmark.bam  METRICS_FILE=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.dup.qc  VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+java -Xmx4G -jar /home/stauffkm/picard-tools-1.141/picard.jar MarkDuplicates INPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.sort.bam OUTPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.dupmark.bam  METRICS_FILE=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.dup.qc  VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+java -Xmx4G -jar /home/stauffkm/picard-tools-1.141/picard.jar MarkDuplicates INPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.sort.bam OUTPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.dupmark.bam  METRICS_FILE=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.dup.qc  VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+java -Xmx4G -jar /home/stauffkm/picard-tools-1.141/picard.jar MarkDuplicates INPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.sort.bam OUTPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.dupmark.bam  METRICS_FILE=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.dup.qc  VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+java -Xmx4G -jar /home/stauffkm/picard-tools-1.141/picard.jar MarkDuplicates INPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.sort.bam OUTPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.dupmark.bam  METRICS_FILE=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.dup.qc  VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+java -Xmx4G -jar /home/stauffkm/picard-tools-1.141/picard.jar MarkDuplicates INPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.sort.bam OUTPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.dupmark.bam  METRICS_FILE=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.dup.qc  VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+java -Xmx4G -jar /home/stauffkm/picard-tools-1.141/picard.jar MarkDuplicates INPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.sort.bam OUTPUT=/scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.dupmark.bam  METRICS_FILE=/scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.dup.qc  VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false
+
+mv /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.dupmark.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.sort.bam
+mv /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.dupmark.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.sort.bam
+mv /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.dupmark.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.sort.bam
+mv /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.dupmark.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.sort.bam
+mv /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.dupmark.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.sort.bam
+mv /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.dupmark.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.sort.bam
+mv /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.dupmark.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.sort.bam
+mv /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.dupmark.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.sort.bam
+
+# ============================
+# Remove duplicates
+# Index final position sorted BAM
+# ============================
+FINAL_BAM_PREFIX="${OFPREFIX}.filt.nodup.srt"
+FINAL_BAM_FILE="${FINAL_BAM_PREFIX}.bam" # To be stored
+FINAL_BAM_INDEX_FILE="${FINAL_BAM_PREFIX}.bai" # To be stored
+FINAL_BAM_FILE_MAPSTATS="${FINAL_BAM_PREFIX}.flagstat.qc" # QC file
+samtools view -F 1804 -b ${FILT_BAM_FILE} -o ${FINAL_BAM_FILE}
+# Index Final BAM file
+samtools index ${FINAL_BAM_FILE} ${FINAL_BAM_INDEX_FILE}
+samtools flagstat ${FINAL_BAM_FILE} > ${FINAL_BAM_FILE_MAPSTATS}
+
+samtools view -F 1804 -b /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bam
+samtools view -F 1804 -b /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bam
+samtools view -F 1804 -b /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bam
+samtools view -F 1804 -b /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bam
+samtools view -F 1804 -b /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bam
+samtools view -F 1804 -b /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bam
+samtools view -F 1804 -b /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bam
+samtools view -F 1804 -b /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.sort.bam -o /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bam
+
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bai
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bai
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bai
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bai
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bai
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bai
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bai
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bai
+
+samtools flagstat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.flagstat.qc
+samtools flagstat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.flagstat.qc
+samtools flagstat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.flagstat.qc
+samtools flagstat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.flagstat.qc
+samtools flagstat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.flagstat.qc
+samtools flagstat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.flagstat.qc
+samtools flagstat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.flagstat.qc
+samtools flagstat /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.flagstat.qc
+
+# =============================
+# Compute library complexity
+# =============================
+# sort by position and strand
+# Obtain unique count statistics
+module add bedtools/2.26.0
+PBC_FILE_QC="${FINAL_BAM_PREFIX}.pbc.qc" /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-8.filt.nodup.srt.pbc.qc
+# PBC File output
+# TotalReadPairs [tab] DistinctReadPairs [tab] OneReadPair [tab] TwoReadPairs [tab] NRF=Distinct/Total [tab] PBC1=OnePair/Distinct [tab] PBC2=OnePair/TwoPair
+bedtools bamtobed -i ${FILT_BAM_FILE} | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > ${PBC_FILE_QC}
+rm ${FILT_BAM_FILE}
+
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.sort.bam  | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.sort.pbc.qc
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.sort.bam  | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.sort.pbc.qc
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.sort.bam  | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.sort.pbc.qc
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.sort.bam  | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.sort.pbc.qc
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.sort.bam  | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.sort.pbc.qc
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.sort.bam  | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.sort.pbc.qc
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.sort.bam  | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.sort.pbc.qc
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.sort.bam  | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$6}' | grep -v 'chrM' | sort | uniq -c | awk 'BEGIN{mt=0;m0=0;m1=0;m2=0} ($1==1){m1=m1+1} ($1==2){m2=m2+1} {m0=m0+1} {mt=mt+$1} END{printf "%d\t%d\t%d\t%d\t%f\t%f\t%f\n",mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}' > /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.sort.pbc.qc
+
+rm /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.sort.bam
+rm /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.sort.bam
+rm /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.sort.bam
+rm /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.sort.bam
+rm /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.sort.bam
+rm /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.sort.bam
+rm /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.sort.bam
+rm /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.sort.bam
+
+# ===================
+# Create tagAlign file
+# ===================
+module add bedtools/2.26.0
+# Create SE tagAlign file
+FINAL_TA_FILE="${FINAL_BAM_PREFIX}.SE.tagAlign.gz"
+bedtools bamtobed -i ${FINAL_BAM_FILE} | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > ${FINAL_TA_FILE}
+
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bam  | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.SE.tagAlign.gz
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bam  | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.SE.tagAlign.gz
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bam  | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.SE.tagAlign.gz
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bam  | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.SE.tagAlign.gz
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bam  | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.SE.tagAlign.gz
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bam  | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.SE.tagAlign.gz
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bam  | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.SE.tagAlign.gz
+bedtools bamtobed -i /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bam  | awk 'BEGIN{OFS="\t"}{$4="N";$5="1000";print $0}' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.SE.tagAlign.gz
+
+# =================================
+# Subsample tagAlign file
+# ================================
+NREADS=15000000
+SUBSAMPLED_TA_FILE="${OFPREFIX}.filt.nodup.sample.$((NREADS / 1000000)).SE.tagAlign.gz"
+zcat ${FINAL_TA_FILE} | grep -v “chrM” | shuf -n ${NREADS} --random-source=${FINAL_TA_FILE} | gzip -nc > ${SUBSAMPLED_TA_FILE}
+
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.SE.tagAlign.gz  | grep -v “chrM” | shuf -n 15000000 --random-source=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.sample.15.SE.tagAlign.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.SE.tagAlign.gz  | grep -v “chrM” | shuf -n 15000000 --random-source=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.sample.15.SE.tagAlign.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.SE.tagAlign.gz  | grep -v “chrM” | shuf -n 15000000 --random-source=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.sample.15.SE.tagAlign.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.SE.tagAlign.gz  | grep -v “chrM” | shuf -n 15000000 --random-source=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.sample.15.SE.tagAlign.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.SE.tagAlign.gz  | grep -v “chrM” | shuf -n 15000000 --random-source=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.sample.15.SE.tagAlign.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.SE.tagAlign.gz  | grep -v “chrM” | shuf -n 15000000 --random-source=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.sample.15.SE.tagAlign.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.SE.tagAlign.gz  | grep -v “chrM” | shuf -n 15000000 --random-source=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.sample.15.SE.tagAlign.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.SE.tagAlign.gz  | grep -v “chrM” | shuf -n 15000000 --random-source=/scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.sample.15.SE.tagAlign.gz
+
+# =================================
+# Calculate Cross-correlation QC scores
+# ================================
+CC_SCORES_FILE="${SUBSAMPLED_TA_FILE}.cc.qc"
+CC_PLOT_FILE="${SUBSAMPLED_TA_FILE}.cc.plot.pdf"
+# CC_SCORE FILE format
+# Filename <tab> numReads <tab> estFragLen <tab> corr_estFragLen <tab> PhantomPeak <tab> corr_phantomPeak <tab> argmin_corr <tab> min_corr <tab> phantomPeakCoef <tab> relPhantomPeakCoef <tab> QualityTag
+Rscript $(which run_spp.R) -c=${SUBSAMPLED_TA_FILE} -p=${NTHREADS} -filtchr=chrM -savp=${CC_PLOT_FILE} -out=${CC_SCORES_FILE}
+sed -r 's/,[^\t]+//g' ${CC_SCORES_FILE} > temp
+mv temp ${CC_SCORES_FILE}
+
+Rscript /home/stauffkm/SEQanalysis/run_spp.R.copy -c=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.sample.15.SE.tagAlign.gz -p=1  -filtchr=chrM -savp=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.cc.plot.pdf  -out=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.cc.qc
+Rscript /home/stauffkm/SEQanalysis/run_spp.R.copy -c=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.sample.15.SE.tagAlign.gz -p=1  -filtchr=chrM -savp=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.cc.plot.pdf  -out=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.cc.qc
+Rscript /home/stauffkm/SEQanalysis/run_spp.R.copy -c=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.sample.15.SE.tagAlign.gz -p=1  -filtchr=chrM -savp=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.cc.plot.pdf  -out=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.cc.qc
+Rscript /home/stauffkm/SEQanalysis/run_spp.R.copy -c=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.sample.15.SE.tagAlign.gz -p=1  -filtchr=chrM -savp=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.cc.plot.pdf  -out=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.cc.qc
+Rscript /home/stauffkm/SEQanalysis/run_spp.R.copy -c=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.sample.15.SE.tagAlign.gz -p=1  -filtchr=chrM -savp=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.cc.plot.pdf  -out=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.cc.qc
+Rscript /home/stauffkm/SEQanalysis/run_spp.R.copy -c=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.sample.15.SE.tagAlign.gz -p=1  -filtchr=chrM -savp=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.cc.plot.pdf  -out=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.cc.qc
+Rscript /home/stauffkm/SEQanalysis/run_spp.R.copy -c=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.sample.15.SE.tagAlign.gz -p=1  -filtchr=chrM -savp=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.cc.plot.pdf  -out=/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.cc.qc
+Rscript /home/stauffkm/SEQanalysis/run_spp.R.copy -c=/scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.sample.15.SE.tagAlign.gz -p=1  -filtchr=chrM -savp=/scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.cc.plot.pdf  -out=/scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.cc.qc
+
+sed -r 's/,[^\t]+//g' /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.cc.qc > temp125
+sed -r 's/,[^\t]+//g' /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.cc.qc > temp119
+sed -r 's/,[^\t]+//g' /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.cc.qc > temp126
+sed -r 's/,[^\t]+//g' /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.cc.qc > temp121
+sed -r 's/,[^\t]+//g' /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.cc.qc > temp124
+sed -r 's/,[^\t]+//g' /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.cc.qc > temp135
+sed -r 's/,[^\t]+//g' /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.cc.qc > temp137
+sed -r 's/,[^\t]+//g' /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.cc.qc > temp4
+
+mv temp125 /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.cc.qc
+mv temp119 /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.cc.qc
+mv temp126 /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.cc.qc
+mv temp121 /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.cc.qc
+mv temp124 /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.cc.qc
+mv temp135 /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.cc.qc
+mv temp137 /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.cc.qc
+mv temp4 /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.cc.qc
+
+# ========================
+# Create pseudoReplicates
+# =======================
+PR_PREFIX="${OFPREFIX}.filt.nodup"
+PR1_TA_FILE="${PR_PREFIX}.SE.pr1.tagAlign.gz"
+PR2_TA_FILE="${PR_PREFIX}.SE.pr2.tagAlign.gz"
+# Get total number of read pairs
+nlines=$( zcat ${FINAL_TA_FILE} | wc -l )
+nlines=$(( (nlines + 1) / 2 ))
+# Shuffle and split BED file into 2 equal parts
+zcat ${FINAL_TA_FILE} | shuf --random-source=${FINAL_TA_FILE}  | split -d -l ${nlines} - ${PR_PREFIX} # Will produce ${PR_PREFIX}00 and ${PR_PREFIX}01
+# Convert reads into standard tagAlign file
+gzip -nc “${PR_PREFIX}00" > ${PR1_TA_FILE}
+rm "${PR_PREFIX}00"
+gzip -nc “${PR_PREFIX}01" > ${PR2_TA_FILE}
+rm "${PR_PREFIX}01"
+
+running the self pseudo perl and shell scripts
+
+# ========================
+# Create pooled datasets
+# =======================
+# ========================
+# Create pooled pseudoreplicates
+# =======================
+ running the pooled pseudo perl ad shell scripts
+zcat 3040-TPS-125.filt.nodup.srt.SE.tagAlign.gz 3040-TPS-119.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > ZR751shMLL3H3K4me1.filt.nodup.srt.SE.tagAlign.gz
+zcat 3040-TPS-126.filt.nodup.srt.SE.tagAlign.gz 3040-TPS-121.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > ZR751shLucifH3K4me1.filt.nodup.srt.SE.tagAlign.gz
+zcat 3040-TPS-124.filt.nodup.srt.SE.tagAlign.gz 3040-TPS-135.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > ZR751shMLL3Era.filt.nodup.srt.SE.tagAlign.gz
+zcat 3040-TPS-137.filt.nodup.srt.SE.tagAlign.gz 2501-KS-4.filt.nodup.srt.SE.tagAlign.gz | gzip -nc > ZR751shLucifEra.filt.nodup.srt.SE.tagAlign.gz
+
+# =======================
+# Call peaks on replicates, self-pseudoreplicates, pooled data and pooled-pseudoreplicates
+# =======================
+Rscript run_spp.R -c=${CHIP_TA_PREFIX}.tagAlign.gz  -i=${CONTROL_TA_PREFIX}.tagAlign.gz -npeak=300000 -odir=${PEAK_OUTPUT_DIR} -speak=${FRAGLEN} -savr -savp -rf -out=${PEAK_OUTPUT_DIR}/${CHIP_TA_PREFIX}.ccscores
+| grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}
+# filter out peaks in blacklisted region
+rpeakfile_raw=${CHIP_TA_PREFIX}.tagAlign_VS_${CONTROL_TA_PREFIX}.tagAlign.regionPeak.gz
+rpeakfile=${CHIP_TA_PREFIX}.tagAlign_x_${CONTROL_TA_PREFIX}.tagAlign.regionPeak.gz
+rpeakfile_filt=${CHIP_TA_PREFIX}.tagAlign_x_${CONTROL_TA_PREFIX}.tagAlign.filt.regionPeak.gz
+zcat $rpeakfile_raw | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > $rpeakfile
+bedtools intersect -v -a <(zcat -f $rpeakfile) -b <(zcat -f $blacklist) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > $filt_rpeakfile;
+
+#pooled - done
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shLucifEra/ZR751shLucifEra.pooled.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shLucifH3K4me1/ZR751shLucifH3K4me1.pooled.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}
+more ZR751shMLL3Era.pooled.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}
+more ZR751shMLL3H3K4me1.pooled.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}
+zcat ZR751shLucifEra.pooled.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > ZR751shLucifEra.pooled.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat ZR751shLucifH3K4me1.pooled.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > ZR751shLucifH3K4me1.pooled.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat ZR751shMLL3Era.pooled.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > ZR751shMLL3Era.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat ZR751shMLL3H3K4me1.pooled.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > ZR751shMLL3H3K4me1.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+bedtools intersect -v -a <(zcat -f ZR751shLucifEra.pooled.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > ZR751shLucifEra.pooled.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f ZR751shLucifH3K4me1.pooled.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > ZR751shLucifH3K4me1.pooled.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f ZR751shMLL3Era.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > ZR751shMLL3Era.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f ZR751shMLL3H3K4me1.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > ZR751shMLL3H3K4me1.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+ 
+#original reps - just 119 to go
+more  3040-TPS-137.filt.nodup.srt.SE.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more 3040-TPS-135.filt.nodup.srt.SE.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more 2501-KS-4.filt.nodup.srt.SE.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more 3040-TPS-124.filt.nodup.srt.SE.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more 3040-TPS-125.filt.nodup.srt.SE.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more 3040-TPS-121.filt.nodup.srt.SE.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more 3040-TPS-119.filt.nodup.srt.SE.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more 3040-TPS-126.filt.nodup.srt.SE.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+zcat 3040-TPS-137.filt.nodup.srt.SE.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > 3040-TPS-137.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz 
+zcat 3040-TPS-135.filt.nodup.srt.SE.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > 3040-TPS-135.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz 
+zcat 2501-KS-4.filt.nodup.srt.SE.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > 2501-KS-4.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz 
+zcat 3040-TPS-124.filt.nodup.srt.SE.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > 3040-TPS-124.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz 
+zcat 3040-TPS-125.filt.nodup.srt.SE.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > 3040-TPS-125.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz 
+zcat 3040-TPS-121.filt.nodup.srt.SE.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > 3040-TPS-121.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz 
+zcat 3040-TPS-119.filt.nodup.srt.SE.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > 3040-TPS-119.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat 3040-TPS-126.filt.nodup.srt.SE.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > 3040-TPS-126.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz 
+bedtools intersect -v -a <(zcat -f 3040-TPS-137.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz ) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > 3040-TPS-137.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz 
+bedtools intersect -v -a <(zcat -f 3040-TPS-135.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz ) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > 3040-TPS-135.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz 
+bedtools intersect -v -a <(zcat -f 2501-KS-4.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz ) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > 2501-KS-4.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz 
+bedtools intersect -v -a <(zcat -f 3040-TPS-124.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz ) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > 3040-TPS-124.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz 
+bedtools intersect -v -a <(zcat -f 3040-TPS-125.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz ) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > 3040-TPS-125.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz 
+bedtools intersect -v -a <(zcat -f 3040-TPS-121.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz ) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > 3040-TPS-121.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz 
+bedtools intersect -v -a <(zcat -f 3040-TPS-119.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz ) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > 3040-TPS-119.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz 
+bedtools intersect -v -a <(zcat -f 3040-TPS-126.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz ) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > 3040-TPS-126.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz 
+
+
+#selfpseudo reps - done
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more  /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz  | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz  | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo3040-TPS-125spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz/ | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz  | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz 
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz 
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz 
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz 
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz;
+
+#pooledpseudo reps - still waiting on these to finish up
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+more /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}'
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr1.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr2.tagAlign_VS_2501-KS-13.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr1.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+zcat /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr2.tagAlign_VS_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz | awk 'BEGIN{OFS="\t"}{ if ($2<0) $2=0; print $1,int($2),int($3),$4,$5,$6,$7,$8,$9,$10;}' | gzip -f -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz ) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz ) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifEraspp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr1.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz ) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr2.tagAlign_x_2501-KS-13.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz ) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shLucifH3K4me1spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz ) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz ) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3Eraspp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz ) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz
+bedtools intersect -v -a <(zcat -f /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.regionPeak.gz) -b <(zcat -f /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz ) | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | grep -P 'chr[\dXY]+[ \t]' | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/pooledPseudo/ZR751shMLL3H3K4me1spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz
+
+
+# =============================
+# Perform IDR analysis.
+# Generate a plot and IDR output with additional columns including IDR scores.
+# =============================
+
+see next page
+
+# =============================
+# Get peaks passing IDR threshold of 5%
+# =============================
+
+see next page
+
+# =============================
+# Filter using black list
+# =============================
+
+see next page
+
+
+

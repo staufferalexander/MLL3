@@ -1,0 +1,170 @@
+# -----------------------
+# ngsplot commands		- DONE
+# -----------------------
+gotta get bams ready to plot
+/scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-7.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-8.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-6.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-15.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bam
+/scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bam
+
+samtools merge /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bam
+samtools merge /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bam
+samtools merge /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019.bam /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-6.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-7.filt.nodup.srt.bam 
+samtools merge /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019.bam /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-8.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-15.filt.nodup.srt.bam
+samtools merge /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bam
+samtools merge /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bam /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bam
+
+samtools view -H /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019.sort.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019.sort.bam > /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019.sort.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019.sort.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019.sort.bam > /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019.sort.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019.sort.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019.sort.bam > /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019.sort.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019.sort.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019.sort.bam > /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019.sort.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019.sort.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019.sort.bam > /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019.sort.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019.sort.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019.sort.bam > /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019.sort.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019.sort.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019.sort.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019.sort.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019.sort.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019.sort.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019.sort.new.bam
+
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019.pooled.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019.pooled -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019.pooled.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019.pooled -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019.pooled.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019.pooled -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019.pooled.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019.pooled -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019.pooled.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019.pooled -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019.pooled.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019.pooled -D ensembl -L 3000 -F protein_coding,chipseq
+
+
+#have to rename the chromosomes in the bam files, try the bams in the ZLE ngs file
+samtools view -H /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.new.bam
+samtools view -H /data/strickt2/MLL32501/alignments/2501-KS-13.SE.sorted.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /data/strickt2/MLL32501/alignments/2501-KS-13.SE.bam > /data/strickt2/MLL32501/alignments/2501-KS-13.SE.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.new.bam
+samtools view -H /data/strickt2/MLL32501/alignments/2501-KS-14.SE.sorted.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /data/strickt2/MLL32501/alignments/2501-KS-14.SE.bam > /data/strickt2/MLL32501/alignments/2501-KS-14.SE.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137.filt.nodup.srt.new.bam
+samtools index /data/strickt2/MLL32501/alignments/2501-KS-13.SE.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124.filt.nodup.srt.new.bam
+samtools index /data/strickt2/MLL32501/alignments/2501-KS-14.SE.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135.filt.nodup.srt.new.bam
+
+samtools view -H /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bam  | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.new.bam
+samtools view -H  /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.new.bam
+samtools view -H  /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bam  | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125.filt.nodup.srt.new.bam
+
+samtools view -H  /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-6.filt.nodup.srt.bam | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-6.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-6.filt.nodup.srt.new.bam
+samtools view -H /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-7.filt.nodup.srt.bam  | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-7.filt.nodup.srt.bam  > /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-7.filt.nodup.srt.new.bam 
+samtools view -H /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-8.filt.nodup.srt.bam   | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-8.filt.nodup.srt.bam  > /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-8.filt.nodup.srt.new.bam 
+samtools view -H  /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-15.filt.nodup.srt.bam  | sed -e 's/Chr/chr/g' | sed -e 's/chrC/chrPt/' | samtools reheader - /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-15.filt.nodup.srt.bam > /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-15.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-6.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-7.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-8.filt.nodup.srt.new.bam
+samtools index /scratch/stauffkm/chipseq_2018/tagalign/SP1bams/2501-KS-15.filt.nodup.srt.new.bam
+
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shLucifERa.2019. -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shLucifSP1.2019. -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shLucifH3K4me1.2019. -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shMLL3ERa.2019. -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shMLL3SP1.2019. -D ensembl -L 3000 -F protein_coding,chipseq
+ngs.plot.r -G hg19 -R bed -C /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019.ngs -O /scratch/stauffkm/chipseq_2018/ZR751shMLL3H3K4me1.2019. -D ensembl -L 3000 -F protein_coding,chipseq
+
+# -----------------------
+# bedtools commands			-DONE
+# -----------------------
+
+###keep in mind this is DIRECT OVERLAP
+###should we do this with a 100bp edge on each side?
+bedtools intersect -wa -a /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shLucifEra.final.peaks.bed -b /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shMLL3Era.final.peaks.bed | wc -l
+bedtools intersect -wa -a /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shLucifH3K4me1.final.peaks.bed -b /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shMLL3H3K4me1.final.peaks.bed | wc -l
+bedtools intersect -wa -a /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shLucifSP1.final.peaks.bed -b /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shMLL3SP1.final.peaks.bed | wc -l
+
+ChIP		shLucif  shMLL3	 OverlapforLucif	OverlapforMLL3
+ERa			3585	1246		707				707
+H3K4me1		21151	2127		4427			4427
+SP1			327		2262		247				247
+
+bedtools intersect -wa -a /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shLucifEra.final.peaks.bed -b /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shLucifH3K4me1.final.peaks.bed | wc -l
+bedtools intersect -wa -a /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shMLL3Era.final.peaks.bed -b /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shMLL3H3K4me1.final.peaks.bed | wc -l
+
+Geno		ERa		H3K4me1		OverlapforERa	OverlapforH3K4me1
+shLucif		3609	23655		588				588
+shMLL3		1710	4515		36				36
+
+bedtools intersect -wa  -a /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shLucifEra.final.peaks.bed -b /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shLucifSP1.final.peaks.bed | wc -l
+bedtools intersect -wa  -a /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shMLL3Era.final.peaks.bed -b /Users/staufferkm/Desktop/2019bedfiles/bedfiles/ZR751shMLL3SP1.final.peaks.bed | wc -l
+
+Geno		ERa		SP1		OverlapforERa		OverlapforSP1
+shLucif		3981	467		6					6
+shMLL3		1727	2482	11					11				
+
+# -----------------------
+# meme commands			-IN PROGRESS
+# -----------------------
+meme
+dreme
+centrimo
+###have to make the bedfiles suitable for MEME first
+cat ZR751shLucifSP1.IDR0.5.filt.narrowPeak | awk 'BEGIN{ OFS="\t";} { midPos=$2+$10; print $1, midPos-250, midPos+250;}'> ZR751shLucifSP1.IDR0.5.filt.500bp.bed
+cat ZR751shMLL3SP1.IDR0.5.filt.narrowPeak | awk 'BEGIN{ OFS="\t";} { midPos=$2+$10; print $1, midPos-250, midPos+250;}'> ZR751shMLL3SP1.IDR0.5.filt.500bp.bed
+cat ZR751shMLL3H3K4me1.IDR0.2.filt.narrowPeak | awk 'BEGIN{ OFS="\t";} { midPos=$2+$10; print $1, midPos-250, midPos+250;}'> ZR751shMLL3H3K4me1.IDR0.2.filt.narrowPeak.500bp.bed
+cat ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.filt.narrowPeak | awk 'BEGIN{ OFS="\t";} { midPos=$2+$10; print $1, midPos-250, midPos+250;}'> ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.filt.500bp.bed
+cat ZR751shLucifEra.pooledpseudo.IDR0.5.filt.narrowPeak | awk 'BEGIN{ OFS="\t";} { midPos=$2+$10; print $1, midPos-250, midPos+250;}'> ZR751shLucifEra.pooledpseudo.IDR0.5.filt.500bp.bed
+cat ZR751shMLL3Era.IDR0.7.filt.narrowPeak | awk 'BEGIN{ OFS="\t";} { midPos=$2+$10; print $1, midPos-250, midPos+250;}'> ZR751shMLL3Era.IDR0.7.filt.500bp.bed
+
+bedtools getfasta -fi /Users/staufferkm/Dropbox/Kim/MEME/BEDfilesforMemechipOct2016/hg19.fa -bed /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifSP1.IDR0.5.filt.500bp.bed -fo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifSP1.IDR0.5.filt.500bp.fa
+bedtools getfasta -fi /Users/staufferkm/Dropbox/Kim/MEME/BEDfilesforMemechipOct2016/hg19.fa -bed /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3SP1.IDR0.5.filt.500bp.bed -fo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3SP1.IDR0.5.filt.500bp.fa
+bedtools getfasta -fi /Users/staufferkm/Dropbox/Kim/MEME/BEDfilesforMemechipOct2016/hg19.fa -bed /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3H3K4me1.IDR0.2.filt.500bp.bed -fo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3H3K4me1.IDR0.2.filt.500bp.fa
+bedtools getfasta -fi /Users/staufferkm/Dropbox/Kim/MEME/BEDfilesforMemechipOct2016/hg19.fa -bed /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.filt.500bp.bed -fo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.filt.500bp.fa
+bedtools getfasta -fi /Users/staufferkm/Dropbox/Kim/MEME/BEDfilesforMemechipOct2016/hg19.fa -bed /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifEra.pooledpseudo.IDR0.5.filt.500bp.bed -fo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifEra.pooledpseudo.IDR0.5.filt.500bp.fa
+bedtools getfasta -fi /Users/staufferkm/Dropbox/Kim/MEME/BEDfilesforMemechipOct2016/hg19.fa -bed /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3Era.IDR0.7.filt.500bp.bed -fo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3Era.IDR0.7.filt.500bp.fa
+
+meme /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifSP1.IDR0.5.filt.500bp.fa -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifSP1meme -maxsize 5000000 -dna -nmotifs 3
+meme /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3SP1.IDR0.5.filt.500bp.fa -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3SP1meme -maxsize 5000000 -dna -nmotifs 3
+meme /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3H3K4me1.IDR0.2.filt.500bp.fa -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3H3K4me1meme -maxsize 5000000 -dna -nmotifs 3
+*meme /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.filt.500bp.fa -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifH3K4me1meme -maxsize 5000000 -dna -nmotifs 3
+*meme /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifEra.pooledpseudo.IDR0.5.filt.500bp.fa -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifErameme -maxsize 5000000 -dna -nmotifs 3
+*meme /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3Era.IDR0.7.filt.500bp.fa -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3Erameme -maxsize 5000000 -dna -nmotifs 3
+
+dreme -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifSP1dreme -p /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifSP1.IDR0.5.filt.500bp.fa
+dreme -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3SP1dreme -p /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3SP1.IDR0.5.filt.500bp.fa
+dreme -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3H3K4me1dreme -p /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3H3K4me1.IDR0.2.filt.500bp.fa
+dreme -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifH3K4me1dreme -p /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.filt.500bp.fa
+dreme -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifEradreme -p /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifEra.pooledpseudo.IDR0.5.filt.500bp.fa
+dreme -o /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3Eradreme -p /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3Era.IDR0.7.filt.500bp.fa
+
+centrimo -o=/Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifSP1centrimo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifSP1.IDR0.5.filt.500bp.fa /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+centrimo -o=/Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3SP1centrimo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3SP1.IDR0.5.filt.500bp.fa /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+centrimo -o=/Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3H3K4me1centrimo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3H3K4me1.IDR0.2.filt.500bp.fa /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+centrimo -o=/Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifH33K4me1centrimo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.filt.500bp.fa /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+centrimo -o=/Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifEracentrimo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shLucifEra.pooledpseudo.IDR0.5.filt.500bp.fa /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+centrimo -o=/Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3Eracentrimo /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/ZR751shMLL3Era.IDR0.7.filt.500bp.fa /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+
+##dreme and meme output txt files put into tomtom 
+done tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifEradreme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifEradreme/dreme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+done tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifSP1dreme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifSP1dreme/dreme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifH3K4me1dreme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifH3K4me1dreme/dreme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3Eradreme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3Eradreme/dreme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3SP1dreme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3SP1dreme/dreme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3H3K4me1dreme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3H3K4me1dreme/dreme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifErameme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifErameme/meme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+running tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifSP1meme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifSP1meme/meme.txt /Users/staufferkm/Downloads/motif_databases\ 2/PROTEIN
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifH3K4me1meme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shLucifH3K4me1meme/meme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3Erameme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3Erameme/meme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3SP1meme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3SP1meme/meme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3H3K4me1meme/tomtom/ /Users/staufferkm/Desktop/2019bedfiles/bedfilesformeme/MEMEoutput/ZR751shMLL3H3K4me1meme/meme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+
+

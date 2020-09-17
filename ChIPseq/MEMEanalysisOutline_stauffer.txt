@@ -1,0 +1,17 @@
+1) make the bed file into a fasta file
+
+2) run MEME
+meme /path/to/fasta/file.fa -o /path/to/output/file -maxsize 5000000 -dna -nmotifs 3
+
+3) run dreme
+dreme -o /path/to/output/file -p /path/to/fasta/file.fa
+
+4) run centrimo
+centrimo -o=/path/to/output/file /path/to/fasta/file.fa /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+
+5) put dreme and meme output into tomtom
+tomtom -oc /path/to/output/directory/ /path/to/dreme/output/dreme.xml /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+tomtom -oc /path/to/output/directory/ /path/to/meme/output/meme.txt /Users/staufferkm/Downloads/motif_databases/HUMAN/HOCOMOCOv11_full_HUMAN_mono_meme_format.meme
+
+
+

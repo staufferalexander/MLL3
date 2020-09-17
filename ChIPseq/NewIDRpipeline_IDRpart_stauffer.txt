@@ -1,0 +1,136 @@
+/scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shMLL3H3K4me1/ZR751shMLL3H3K4me1.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz
+/scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shMLL3Era/ZR751shMLL3Era.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz
+/scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shLucifEra/ZR751shLucifEra.pooled.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz
+/scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shLucifH3K4me1/ZR751shLucifH3K4me1.pooled.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz
+
+#original replicates
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125/3040-TPS-125.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119/3040-TPS-119.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shMLL3H3K4me1/ZR751shMLL3H3K4me1.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3H3K4me1 --rank signal.value --soft-idr-threshold 0.1 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124/3040-TPS-124.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135/3040-TPS-135.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shMLL3Era/ZR751shMLL3Era.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3Era --rank signal.value --soft-idr-threshold 0.7 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4/2501-KS-4.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137/3040-TPS-137.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shLucifEra/ZR751shLucifEra.pooled.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifEra --rank signal.value --soft-idr-threshold 0.7 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126/3040-TPS-126.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121/3040-TPS-121.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shLucifH3K4me1/ZR751shLucifH3K4me1.pooled.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifH3K4me1 --rank signal.value --soft-idr-threshold 0.1 --plot --use-best-multisummit-IDR
+
+IDR_THRESH_TRANSFORMED=awk -v p=0.7 'BEGIN{print -log(p)/log(10)}'    --> 0.154902
+IDR_THRESH_TRANSFORMED=awk -v p=0.05 'BEGIN{print -log(p)/log(10)}'    --> 1.30103
+IDR_THRESH_TRANSFORMED=awk -v p=0.2 'BEGIN{print -log(p)/log(10)}'    --> 0.69897
+awk 'BEGIN{OFS="\t"} $12>='"0.69897"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3H3K4me1 | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3H3K4me1.IDR0.2.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.154902"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3Era | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3Era.IDR0.7.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.69897"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifH3K4me1 | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifH3K4me1.IDR0.2.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.154902"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifEra | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifEra.IDR0.7.narrowPeak.gz
+NPEAKS_IDR=$(zcat ZR751shMLL3H3K4me1.IDR0.2.narrowPeak.gz | wc -l)      --> 4541
+NPEAKS_IDR=$(zcat ZR751shMLL3Era.IDR0.7.narrowPeak.gz | wc -l)      --> 1736
+NPEAKS_IDR=$(zcat ZR751shLucifH3K4me1.IDR0.2.narrowPeak.gz | wc -l)      --> 17242
+NPEAKS_IDR=$(zcat ZR751shLucifEra.IDR0.7.narrowPeak.gz | wc -l)      --> 1483
+bedtools intersect -v -a ZR751shMLL3H3K4me1.IDR0.2.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > ZR751shMLL3H3K4me1.IDR0.2.filt.narrowPeak.gz
+bedtools intersect -v -a ZR751shMLL3Era.IDR0.7.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > ZR751shMLL3Era.IDR0.7.filt.narrowPeak.gz
+bedtools intersect -v -a ZR751shLucifH3K4me1.IDR0.2.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > ZR751shLucifH3K4me1.IDR0.2.filt.narrowPeak.gz
+bedtools intersect -v -a ZR751shLucifEra.IDR0.7.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > ZR751shLucifEra.IDR0.7.filt.narrowPeak.gz
+
+#pooled-pseudo replicates
+idr --samples ZR751shLucifEraspp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz ZR751shLucifEraspp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shLucifEra/ZR751shLucifEra.pooled.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifEra.pooledpseudo --rank signal.value --soft-idr-threshold 0.5 --plot --use-best-multisummit-IDR
+
+idr --samples ZR751shLucifH3K4me1spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz ZR751shLucifH3K4me1spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shLucifH3K4me1/ZR751shLucifH3K4me1.pooled.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifH3K4me1.pooledpseudo --rank signal.value --soft-idr-threshold 0.05 --plot --use-best-multisummit-IDR
+
+idr --samples ZR751shMLL3Eraspp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz ZR751shMLL3Eraspp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shMLL3Era/ZR751shMLL3Era.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3Era.pooledpseudo --rank signal.value --soft-idr-threshold 0.5 --plot --use-best-multisummit-IDR
+
+idr --samples ZR751shMLL3H3K4me1spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz ZR751shMLL3H3K4me1spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/ZR751shMLL3H3K4me1/ZR751shMLL3H3K4me1.pooled.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3H3K4me1.pooledpseudo --rank signal.value --soft-idr-threshold 0.05 --plot --use-best-multisummit-IDR 
+
+IDR_THRESH_TRANSFORMED=awk -v p=0.5 'BEGIN{print -log(p)/log(10)}'    --> 0.30103
+IDR_THRESH_TRANSFORMED=awk -v p=0.25 'BEGIN{print -log(p)/log(10)}'    --> 0.60206
+IDR_THRESH_TRANSFORMED=awk -v p=0.05 'BEGIN{print -log(p)/log(10)}'    --> 1.30103
+awk 'BEGIN{OFS="\t"} $12>='"0.30103"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifEra.pooledpseudo | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifEra.pooledpseudo.IDR0.5.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.30103"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3Era.pooledpseudo | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3Era.pooledpseudo.IDR0.5.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"1.30103"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifH3K4me1.pooledpseudo | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"1.30103"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3H3K4me1.pooledpseudo | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/ZR751shMLL3H3K4me1.pooledpseudo.IDR0.05.narrowPeak.gz
+NPEAKS_IDR=$(zcat ZR751shMLL3H3K4me1.pooledpseudo.IDR0.05.narrowPeak.gz | wc -l)      --> 865
+NPEAKS_IDR=$(zcat ZR751shMLL3Era.pooledpseudo.IDR0.5.narrowPeak.gz | wc -l)      --> 1511
+NPEAKS_IDR=$(zcat ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.narrowPeak.gz | wc -l)      --> 24108
+NPEAKS_IDR=$(zcat ZR751shLucifEra.pooledpseudo.IDR0.5.narrowPeak.gz | wc -l)      --> 3986
+bedtools intersect -v -a ZR751shMLL3H3K4me1.pooledpseudo.IDR0.05.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > ZR751shMLL3H3K4me1.pooledpseudo.IDR0.05.filt.narrowPeak.gz
+bedtools intersect -v -a ZR751shMLL3Era.pooledpseudo.IDR0.5.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > ZR751shMLL3Era.pooledpseudo.IDR0.5.filt.narrowPeak.gz
+bedtools intersect -v -a ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > ZR751shLucifH3K4me1.pooledpseudo.IDR0.05.filt.narrowPeak.gz
+bedtools intersect -v -a ZR751shLucifEra.pooledpseudo.IDR0.5.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > ZR751shLucifEra.pooledpseudo.IDR0.5.filt.narrowPeak.gz
+
+
+#self-pseudo replicates
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-135spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-135/3040-TPS-135.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/135  --rank signal.value --soft-idr-threshold 0.7 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-119spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-119/3040-TPS-119.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/119 --rank signal.value --soft-idr-threshold 0.25 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-124spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-124/3040-TPS-124.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/124 --rank signal.value --soft-idr-threshold 0.7 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr1.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-125spp.pr2.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-125/3040-TPS-125.filt.nodup.srt.SE.tagAlign_x_Input2018_ZR751shMLL3.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/125 --rank signal.value --soft-idr-threshold 0.25 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-137spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-137/3040-TPS-137.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/137 --rank signal.value --soft-idr-threshold 0.7 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-126spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-126/3040-TPS-126.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/126 --rank signal.value --soft-idr-threshold 0.25 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/2501-KS-4spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/2501-KS-4/2501-KS-4.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/4 --rank signal.value --soft-idr-threshold 0.7 --plot --use-best-multisummit-IDR
+
+idr --samples /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr1.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz /scratch/stauffkm/chipseq_2018/tagalign/tags/selfPseudo/3040-TPS-121spp.pr2.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz --peak-list /scratch/stauffkm/chipseq_2018/tagalign/tags/3040-TPS-121/3040-TPS-121.filt.nodup.srt.SE.tagAlign_x_2501-KS-13.tagAlign.filt.regionPeak.gz  --input-file-type narrowPeak --output-file /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/121 --rank signal.value --soft-idr-threshold 0.25 --plot --use-best-multisummit-IDR
+
+awk 'BEGIN{OFS="\t"} $12>='"0.154902"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/135  | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/135.IDR0.7.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.154902"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/137  | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/137.IDR0.7.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.60206"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/121  | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/121.IDR0.25.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.60206"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/119  | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/119.IDR0.25.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.154902"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/124  | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/124.IDR0.7.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.60206"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/125  | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/125.IDR0.25.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.60206"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/126  | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/126.IDR0.25.narrowPeak.gz
+awk 'BEGIN{OFS="\t"} $12>='"0.154902"' {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/4  | sort | uniq | sort -k7n,7n | gzip -nc > /scratch/stauffkm/chipseq_2018/tagalign/tags/newIDR/4.IDR0.7.narrowPeak.gz
+NPEAKS_IDR=$(zcat 137.IDR0.7.narrowPeak.gz | wc -l)      --> 385
+NPEAKS_IDR=$(zcat 135.IDR0.7.narrowPeak.gz | wc -l)      --> 645
+NPEAKS_IDR=$(zcat 119.IDR0.25.narrowPeak.gz | wc -l)      --> 3730
+NPEAKS_IDR=$(zcat 121.IDR0.25.narrowPeak.gz | wc -l)      --> 7998
+NPEAKS_IDR=$(zcat 124.IDR0.7.narrowPeak.gz | wc -l)      --> 3367
+NPEAKS_IDR=$(zcat 125.IDR0.25.narrowPeak.gz | wc -l)      --> 3654
+NPEAKS_IDR=$(zcat 126.IDR0.25.narrowPeak.gz | wc -l)      --> 22345
+NPEAKS_IDR=$(zcat 4.IDR0.7.narrowPeak.gz | wc -l)      --> 5303
+bedtools intersect -v -a 137.IDR0.7.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > 137.IDR0.7.filt.narrowPeak.gz
+bedtools intersect -v -a 135.IDR0.7.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > 135.IDR0.7.filt.narrowPeak.gz
+bedtools intersect -v -a 124.IDR0.7.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > 124.IDR0.7.filt.narrowPeak.gz
+bedtools intersect -v -a 4.IDR0.7.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > 4.IDR0.7.filt.narrowPeak.gz
+bedtools intersect -v -a 119.IDR0.25.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > 119.IDR0.25.filt.narrowPeak.gz
+bedtools intersect -v -a 121.IDR0.25.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > 121.IDR0.25.filt.narrowPeak.gz
+bedtools intersect -v -a 125.IDR0.25.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > 125.IDR0.25.filt.narrowPeak.gz
+bedtools intersect -v -a 126.IDR0.25.narrowPeak.gz -b /scratch/stauffkm/chipseq_2018/wgEncodeDacMapabilityConsensusExcludable.bed.gz | grep -P 'chr[\dXY]+[ \t]' | awk 'BEGIN{OFS="\t"} {if ($5>1000) $5=1000; print $0}' | gzip -nc > 126.IDR0.25.filt.narrowPeak.gz
+
+----------------------CHOOSING FINAL PEAK THRESHOLDS-------------------
+##Using original replicates, Era with threshold of p<0.7, H3K4me1 p<0.1
+ZR751shMLL3Era nt = 1736 **using this for final
+ZR751shLucifEra nt = 1483 
+ZR751shMLL3H3K4me1 nt = 4541 **using this for final
+ZR751shLucifH3K4me1 nt =  17242 
+
+using original replicates for both SP1s
+
+
+##Using pooledpseudoreplicates, Era with threshold of p<0.5, H3K4me1 with p<0.05
+ZR751shMLL3Era Np=1511 Rescue Ratio - 0.00058 	
+ZR751shLucifEra Np=3986 Rescue Ratio - 2.69		
+ZR751shMLL3H3K4me1 Np=865 Rescue Ratio - 5.25	
+ZR751shLucifH3K4me1 Np=24,108 Rescue Ratio - 1.40	
+
+##Using self-pseudoreplicates, Era with threshold of p<0.7, H3K4me1 with 0.25
+ZR751shMLL3Era - 5.22
+124 - 3367    
+135 - 645  
+ZR751shLucifEra - 13.77
+137 - 385    
+4 -   5303 
+ZR751shMLL3H3K4me1 - 1.02
+125 - 3654   
+119 -  3730 
+ZR751shLucifH3K4me1 - 2.79
+126 - 22345   
+121 - 7998    
+
+
+Rescue Ratio max(Np,Nt) / min(Np,Nt) 
+Self-consistency Ratio  max(N1,N2) / min(N1,N2) 
+If Rescue Ratio AND self-consistency Ratio are both > 2, Flag the file for reproducibility FAIL (-1)
+If Rescue Ratio OR self-consistency Ratio are > 2, Flag the file for reproducibility Borderline (0)
+
+
+
