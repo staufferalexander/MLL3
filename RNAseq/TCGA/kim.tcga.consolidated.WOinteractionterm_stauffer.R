@@ -119,7 +119,7 @@ for (i in 1:dim(fcleanERLumMLL3)[1]) {	##for each sample
 #write.table(residualsfcleanERLumMLL3.2, file="residualsfcleanERLumMLL3_8182016.txt", col.name = F, row.names = F, quote = F, sep = "\t")
 
 
-### bc I can't logon to the stupid desktop computer for whatever reason
+
 genetable = read.delim(file = "allgenesMLL3MutStatusfcleanERLumMLL32216.txt", header = T, as.is = T, sep = "\t", quote = "")
 qpv_otherMLL3=qvalue(as.numeric(genetable[,2]))
 summary(qpv_otherMLL3)
